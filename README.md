@@ -47,6 +47,17 @@ To add additional dependencies, for example other CDK libraries, just add
 them to your `setup.py` file and rerun the `pip install -r requirements.txt`
 command.
 
+```
+nvm use --lts  
+node 14
+
+$ cdk deploy --profile sandpit
+```
+
+```
+$ cdk destroy --profile sandpit
+```
+
 ## Useful commands
 
  * `cdk ls`          list all stacks in the app
