@@ -5,7 +5,7 @@ from aws_cdk import (
 )
 import aws_cdk as cdk
 import aws_cdk.aws_ec2 as ec2
-import aws_cdk.aws_ec2.ClientVpnEndpoint as vpn
+# import aws_cdk.aws_ec2.ClientVpnEndpoint as vpn
             
 from constructs import Construct
 
@@ -19,27 +19,18 @@ class VpnClientStack(Stack):
                            max_azs=1,
                            cidr="192.168.0.0/16",
                            subnet_configuration=
-                            [ ec2.SubnetConfiguration(
-                               subnet_type=ec2.SubnetType.PRIVATE_ISOLATED,
-                               name="PrivateSubnetApp",
-                               cidr_mask=24
-                           ), ec2.SubnetConfiguration(
+                            [  ec2.SubnetConfiguration(
                                subnet_type=ec2.SubnetType.PRIVATE_ISOLATED,
                                name="PrivateSubnetVPNTarget",
                                cidr_mask=24
-                           )                           
+                            )                           
                            ]
                         )
 
         # Create VPN Endpoint and Associate with VPC
-        endpoint = self.vpc.add_client_vpn_endpoint("Endpoint",
+        endpoint = self.vpc.add_client_vpn_endpoint("VPNClientEndpoint",
             cidr="10.10.0.0/16",
-            server_certificate_arn="arn:aws:acm:us-east-1:123456789012:certificate/server-certificate-id",
-            user_based_authentication=ec2.ClientVpnUserBasedAuthentication.federated(saml_provider),
-            authorize_all_users_to_vpc_cidr=False
-        )
-
-        endpoint.add_authorization_rule("Rule",
-            cidr="10.0.10.0/32",
-            group_id="group-id"
+            server_certificate_arn="arn:aws:acm:ap-southeast-2:915922766016:certificate/1d88cc91-aa0c-4a2e-b2fc-86a4e96ab358",
+            client_certificate_arn="arn:aws:acm:ap-southeast-2:915922766016:certificate/b4abb268-abeb-4153-81dd-467378f6e404",
+            logging=False  
         )
