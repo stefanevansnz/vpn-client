@@ -26,6 +26,8 @@ class VpnClientStack(Stack):
                            )                           
                            ]
                         )
+        # Save private subnet details
+        self.private_subnet = self.vpc.select_subnets(subnet_group_name="PrivateSubnetVPNTarget").subnets[0]
 
         # Create VPN Endpoint and Associate with VPC
         self.endpoint = self.vpc.add_client_vpn_endpoint("VPNClientEndpoint",
@@ -36,10 +38,20 @@ class VpnClientStack(Stack):
         )
 
         # Create new public subnet and add to VPC
-        self.private_subnet = self.vpc.select_subnets(subnet_group_name="PrivateSubnetVPNTarget").subnets[0]
         self.public_subnet = ec2.PublicSubnet(self, "PublicSubnetVPNApp",
             vpc_id=self.vpc.vpc_id,
             availability_zone=self.private_subnet.availability_zone,
             cidr_block='192.168.100.0/24')
+
+        # Create IGW and add to public subnet
+        self.igw = ec2.CfnInternetGateway(self, "InternetGateway")
+        self.vpc_gateway_attachment = ec2.CfnVPCGatewayAttachment(self, "VPCGatewayAttachment",
+            vpc_id=self.vpc.vpc_id,
+            internet_gateway_id=self.igw.ref)
+        self.public_subnet.add_default_internet_route(
+            gateway_id=self.igw.ref,
+            gateway_attachment=self.vpc_gateway_attachment,            
+        )
+        
         
 
