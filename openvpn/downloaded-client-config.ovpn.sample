@@ -1,0 +1,24 @@
+client
+dev tun
+proto udp
+remote xxzzxx.cvpn-endpoint-02a6b7dc745591157.prod.clientvpn.ap-southeast-2.amazonaws.com 443
+remote-random-hostname
+resolv-retry infinite
+nobind
+remote-cert-tls server
+cipher AES-256-GCM
+verb 3
+
+reneg-sec 0
+
+<ca>
+
+</ca>
+
+<cert>
+
+</cert>
+
+<key>
+
+</key>
