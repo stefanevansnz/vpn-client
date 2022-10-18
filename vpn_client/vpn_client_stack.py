@@ -19,13 +19,14 @@ class VpnClientStack(Stack):
                            max_azs=1,
                            cidr="192.168.0.0/16",
                            subnet_configuration=[ 
-                           ec2.SubnetConfiguration(
+                           ec2.SubnetConfiguration (
                                subnet_type=ec2.SubnetType.PRIVATE_ISOLATED,
                                name="PrivateSubnetVPNTarget",
                                cidr_mask=24
-                           )                           
+                               )                           
                            ]
-                        )
+        )
+
         # Save private subnet details
         self.private_subnet = self.vpc.select_subnets(subnet_group_name="PrivateSubnetVPNTarget").subnets[0]
 
@@ -40,8 +41,15 @@ class VpnClientStack(Stack):
         # Create new public subnet and add to VPC
         self.public_subnet = ec2.PublicSubnet(self, "PublicSubnetVPNApp",
             vpc_id=self.vpc.vpc_id,
-            availability_zone=self.private_subnet.availability_zone,
-            cidr_block='192.168.100.0/24')
+            #availability_zone=self.private_subnet.availability_zone,
+            availability_zone='ap-southeast-2c',
+            cidr_block='192.168.100.0/24'
+        )
+        # Associate Public Subnet with VPN Client endpoint
+        self.clientvpnassoc = ec2.CfnClientVpnTargetNetworkAssociation(self, "ClientVPNAssociation",
+            client_vpn_endpoint_id=self.endpoint.endpoint_id,
+            subnet_id=self.public_subnet.subnet_id
+        )                
 
         # Create IGW and add to public subnet
         self.igw = ec2.CfnInternetGateway(self, "InternetGateway")
@@ -51,6 +59,17 @@ class VpnClientStack(Stack):
         self.public_subnet.add_default_internet_route(
             gateway_id=self.igw.ref,
             gateway_attachment=self.vpc_gateway_attachment,            
+        )
+
+        # Allow internet through the VPN Endpoint
+        self.endpoint.add_authorization_rule("Rule",
+            cidr="0.0.0.0/0"
+        )
+    
+        # Route internet traffic to public subnet        
+        self.endpoint.add_route("VPNEndpointInternetRoute",
+            cidr="0.0.0.0/0",
+            target=ec2.ClientVpnRouteTarget.subnet(self.public_subnet)
         )
         
         

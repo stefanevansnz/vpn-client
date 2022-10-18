@@ -10,3 +10,5 @@ __pycache__
 cdk.out
 
 easyrsa3
+easy-rsa/easyrsa3
+openvpn/downloaded-client-config.ovpn
