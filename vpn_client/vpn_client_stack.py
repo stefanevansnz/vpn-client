@@ -5,7 +5,6 @@ from aws_cdk import (
 )
 import aws_cdk as cdk
 import aws_cdk.aws_ec2 as ec2
-# import aws_cdk.aws_ec2.ClientVpnEndpoint as vpn
             
 from constructs import Construct
 
@@ -13,6 +12,10 @@ class VpnClientStack(Stack):
 
     def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
+
+        # Parameters
+        server_cert_arn= cdk.CfnParameter(self, "ServerCertARN", type="String", description="Server Cert ARN")
+        client_cert_arn= cdk.CfnParameter(self, "ClientCertARN", type="String", description="Client Cert ARN")        
 
         # Client VPN VPC
         self.vpc = ec2.Vpc(self, "ClientVPNVPC",
@@ -33,15 +36,14 @@ class VpnClientStack(Stack):
         # Create VPN Endpoint and Associate with VPC
         self.endpoint = self.vpc.add_client_vpn_endpoint("VPNClientEndpoint",
             cidr="10.10.0.0/16",
-            server_certificate_arn="arn:aws:acm:ap-southeast-2:915922766016:certificate/1d88cc91-aa0c-4a2e-b2fc-86a4e96ab358",
-            client_certificate_arn="arn:aws:acm:ap-southeast-2:915922766016:certificate/b4abb268-abeb-4153-81dd-467378f6e404",
+            server_certificate_arn=server_cert_arn.value_as_string,
+            client_certificate_arn=client_cert_arn.value_as_string,
             logging=False  
         )
 
         # Create new public subnet and add to VPC
         self.public_subnet = ec2.PublicSubnet(self, "PublicSubnetVPNApp",
             vpc_id=self.vpc.vpc_id,
-            #availability_zone=self.private_subnet.availability_zone,
             availability_zone='ap-southeast-2c',
             cidr_block='192.168.100.0/24'
         )

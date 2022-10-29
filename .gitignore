@@ -9,6 +9,6 @@ __pycache__
 .cdk.staging
 cdk.out
 
-easyrsa3
+easy-rsa
 easy-rsa/easyrsa3
 openvpn/downloaded-client-config.ovpn

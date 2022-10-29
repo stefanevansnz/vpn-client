@@ -12,13 +12,13 @@ verb 3
 reneg-sec 0
 
 <ca>
-
+Cert should be here already
 </ca>
 
 <cert>
-
+Copy content from easy-rsa/awscerts/client1.domain.tld.crt 
 </cert>
 
 <key>
-
+Copy content from easy-rsa/awscerts/client1.domain.tld.key 
 </key>

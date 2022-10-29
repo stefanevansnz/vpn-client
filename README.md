@@ -51,11 +51,13 @@ command.
 nvm use --lts  
 node 14
 
-$ cdk deploy --profile sandpit
+cdk deploy --profile sandpit \
+--parameters ServerCertARN="arn:aws:acm:ap-southeast-2:915922766016:certificate/1d88cc91-aa0c-4a2e-b2fc-86a4e96ab358" \
+--parameters ClientCertARN="arn:aws:acm:ap-southeast-2:915922766016:certificate/b4abb268-abeb-4153-81dd-467378f6e404"
 ```
 
 ```
-$ cdk destroy --profile sandpit
+cdk destroy --profile sandpit
 ```
 
 ## Useful commands
