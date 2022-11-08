@@ -1,7 +1,6 @@
 
-# Welcome to your CDK Python project!
-
-This is a blank project for CDK development with Python.
+# AWS VPN Client using CDK
+This is a project to use the CDK development with Python to create an AWS VPN Client Endpoint.
 
 The `cdk.json` file tells the CDK Toolkit how to execute your app.
 
@@ -12,23 +11,9 @@ directory.  To create the virtualenv it assumes that there is a `python3`
 package. If for any reason the automatic creation of the virtualenv fails,
 you can create the virtualenv manually.
 
-To manually create a virtualenv on MacOS and Linux:
-
-```
-$ python3 -m venv .venv
-```
-
-After the init process completes and the virtualenv is created, you can use the following
-step to activate your virtualenv.
 
 ```
 $ source .venv/bin/activate
-```
-
-If you are a Windows platform, you would activate the virtualenv like this:
-
-```
-% .venv\Scripts\activate.bat
 ```
 
 Once the virtualenv is activated, you can install the required dependencies.
